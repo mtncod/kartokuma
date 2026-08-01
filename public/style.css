@@ -1,0 +1,82 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f4f4f5;
+  color: #1c1c1e;
+  margin: 0;
+  padding: 24px 16px;
+}
+
+main {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+p {
+  color: #52525b;
+  margin-top: 0;
+}
+
+.upload-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #a1a1aa;
+  border-radius: 12px;
+  padding: 32px 16px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  margin: 16px 0;
+}
+
+.upload-box input {
+  display: none;
+}
+
+.status {
+  text-align: center;
+  color: #52525b;
+  margin: 16px 0;
+}
+
+.result {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.result pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.result button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 16px;
+  text-align: center;
+}
