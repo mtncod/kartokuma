@@ -42,6 +42,7 @@ describe('POST /api/scan handler', () => {
     await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(405);
+    expect(res.body).toEqual({ error: 'Sadece POST istekleri desteklenir.' });
   });
 
   it('rejects a request missing imageBase64 or mediaType with 400', async () => {
@@ -51,6 +52,7 @@ describe('POST /api/scan handler', () => {
     await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toEqual({ error: 'imageBase64 ve mediaType alanları gerekli.' });
   });
 
   it('rejects an oversized image with 413', async () => {
@@ -63,6 +65,9 @@ describe('POST /api/scan handler', () => {
     await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(413);
+    expect(res.body).toEqual({
+      error: 'Görsel çok büyük. Lütfen daha küçük bir fotoğraf yükleyin.',
+    });
   });
 
   it('returns 200 with card, report, and empty flag on success', async () => {
@@ -103,5 +108,6 @@ describe('POST /api/scan handler', () => {
     await handler(req, res);
 
     expect(res.status).toHaveBeenCalledWith(502);
+    expect(res.body).toEqual({ error: 'Kart okunamadı. Lütfen tekrar deneyin.' });
   });
 });
