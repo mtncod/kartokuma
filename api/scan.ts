@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { extractCard } from '../lib/extractCard.js';
 import { formatReport, isEmptyCard } from '../lib/formatReport.js';
 
-const MAX_BASE64_LENGTH = 6_000_000; // ~4.5MB base64 kodlanmış görsel
+const MAX_BASE64_LENGTH = 4_000_000; // Vercel'in ~4.5MB istek gövdesi limitinin altında kalır
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

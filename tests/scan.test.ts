@@ -55,6 +55,16 @@ describe('POST /api/scan handler', () => {
     expect(res.body).toEqual({ error: 'imageBase64 ve mediaType alanları gerekli.' });
   });
 
+  it('rejects a request missing mediaType (imageBase64 present) with 400', async () => {
+    const req: any = { method: 'POST', body: { imageBase64: 'validbase64' } };
+    const res = createMockRes();
+
+    await handler(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toEqual({ error: 'imageBase64 ve mediaType alanları gerekli.' });
+  });
+
   it('rejects an oversized image with 413', async () => {
     const req: any = {
       method: 'POST',
