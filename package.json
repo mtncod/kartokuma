@@ -1,0 +1,19 @@
+{
+  "name": "kartokuma",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "@vercel/node": "^5.9.3",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}
