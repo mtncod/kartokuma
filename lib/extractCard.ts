@@ -69,7 +69,7 @@ export async function extractCard(
 ): Promise<CardData> {
   const response = await client.messages.create({
     model: 'claude-opus-5',
-    max_tokens: 1024,
+    max_tokens: 4096,
     output_config: {
       effort: 'low',
       format: { type: 'json_schema', schema: CARD_SCHEMA },
@@ -92,10 +92,29 @@ export async function extractCard(
     throw new Error('Claude bu isteği reddetti.');
   }
 
+  if (response.stop_reason === 'max_tokens') {
+    throw new Error('Claude yanıtı tamamlanamadı.');
+  }
+
   const textBlock = response.content.find((block) => block.type === 'text');
   if (!textBlock || typeof textBlock.text !== 'string') {
     throw new Error('Claude yanıtında metin bulunamadı.');
   }
 
-  return JSON.parse(textBlock.text) as CardData;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(textBlock.text);
+  } catch {
+    throw new Error('Claude yanıtı çözümlenemedi.');
+  }
+
+  if (
+    typeof parsed !== 'object' ||
+    parsed === null ||
+    !Array.isArray((parsed as { phones?: unknown }).phones)
+  ) {
+    throw new Error('Claude yanıtı çözümlenemedi.');
+  }
+
+  return parsed as CardData;
 }

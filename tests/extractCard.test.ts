@@ -58,4 +58,75 @@ describe('extractCard', () => {
       'Claude bu isteği reddetti.',
     );
   });
+
+  it('throws when the response was truncated by the token budget', async () => {
+    const client = fakeClient('{"fullName": "eksik', 'max_tokens');
+
+    await expect(extractCard('base64data', 'image/jpeg', client)).rejects.toThrow(
+      'Claude yanıtı tamamlanamadı.',
+    );
+  });
+
+  it('throws when the text block is not valid JSON', async () => {
+    const client = fakeClient('bu json değil {{{');
+
+    await expect(extractCard('base64data', 'image/jpeg', client)).rejects.toThrow(
+      'Claude yanıtı çözümlenemedi.',
+    );
+  });
+
+  it('throws when the parsed JSON does not match the expected shape', async () => {
+    const client = fakeClient(JSON.stringify({ fullName: 'Ayşe Yılmaz', phones: 'not-an-array' }));
+
+    await expect(extractCard('base64data', 'image/jpeg', client)).rejects.toThrow(
+      'Claude yanıtı çözümlenemedi.',
+    );
+  });
+
+  it('sends the expected request params to Claude', async () => {
+    let capturedParams: any;
+    const client: AnthropicMessagesClient = {
+      messages: {
+        create: async (params) => {
+          capturedParams = params;
+          return {
+            stop_reason: 'end_turn',
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({
+                  fullName: '',
+                  jobTitle: '',
+                  company: '',
+                  phones: [],
+                  email: '',
+                  address: '',
+                  website: '',
+                }),
+              },
+            ],
+          };
+        },
+      },
+    };
+
+    await extractCard('the-image-base64', 'image/png', client);
+
+    expect(capturedParams.model).toBe('claude-opus-5');
+    expect(capturedParams.output_config.format.schema.required).toEqual([
+      'fullName',
+      'jobTitle',
+      'company',
+      'phones',
+      'email',
+      'address',
+      'website',
+    ]);
+
+    const imageBlock = capturedParams.messages[0].content.find(
+      (block: any) => block.type === 'image',
+    );
+    expect(imageBlock.source.data).toBe('the-image-base64');
+    expect(imageBlock.source.media_type).toBe('image/png');
+  });
 });
