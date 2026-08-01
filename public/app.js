@@ -24,12 +24,13 @@ fileInput.addEventListener('change', async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ imageBase64: base64, mediaType }),
+      signal: AbortSignal.timeout(60000),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(data.error || 'Bilinmeyen hata.');
+      throw new Error(data.error || 'Sunucuya ulaşılamadı. Lütfen tekrar deneyin.');
     }
 
     hide(statusEl);
@@ -43,7 +44,13 @@ fileInput.addEventListener('change', async () => {
     show(resultEl);
   } catch (err) {
     hide(statusEl);
-    show(errorEl, err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+    if (err && err.name === 'AbortError') {
+      show(errorEl, 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.');
+    } else {
+      show(errorEl, err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+    }
+  } finally {
+    fileInput.value = '';
   }
 });
 
