@@ -4,12 +4,20 @@ function escapeXml(value) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+    .replace(/'/g, '&apos;')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
 }
 
 function escapeCsvCell(value) {
-  const str = String(value ?? '');
-  if (/[;"\n]/.test(str)) {
+  let str = String(value ?? '');
+  // Excel/Sheets formül enjeksiyonu: '=', '+', '-', '@' (veya TAB/CR) ile
+  // başlayan bir hücre formül olarak yorumlanır. Tek tırnak öneki ekleyerek
+  // metne zorla — bu hem kötü niyetli formülleri hem de +90 ile başlayan
+  // sıradan Türkiye telefon numaralarının yanlış yorumlanmasını önler.
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = "'" + str;
+  }
+  if (/[;"\n\r]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;

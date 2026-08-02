@@ -57,6 +57,31 @@ describe('buildCsv', () => {
 
     expect(dataLine).toContain('"Levent; Beşiktaş"');
   });
+
+  it('neutralizes a formula-injection payload with a leading apostrophe', () => {
+    const card = makeCard({ company: '=SUM(1,2)' });
+    const csv = buildCsv(card);
+    const dataLine = csv.replace(/^\uFEFF/, '').split('\r\n')[1];
+
+    expect(dataLine).toContain("'=SUM(1,2)");
+    expect(dataLine).not.toMatch(/;=SUM/);
+  });
+
+  it('preserves a Turkish international-format phone number as text, not a formula', () => {
+    const card = makeCard({ phones: ['+90 212 555 11 22'] });
+    const csv = buildCsv(card);
+    const dataLine = csv.replace(/^\uFEFF/, '').split('\r\n')[1];
+
+    expect(dataLine).toContain("'+90 212 555 11 22");
+  });
+
+  it('quotes a cell containing a bare carriage return', () => {
+    const card = makeCard({ address: 'Levent\rBeşiktaş' });
+    const csv = buildCsv(card);
+    const dataLine = csv.replace(/^\uFEFF/, '').split('\r\n')[1];
+
+    expect(dataLine).toContain('"Levent\rBeşiktaş"');
+  });
 });
 
 describe('buildXml', () => {
@@ -96,6 +121,13 @@ describe('buildXml', () => {
     const xml = buildXml(card);
 
     expect(xml).toContain('<sirket>A &amp; B &lt;Ltd&gt; &quot;Şti&quot;</sirket>');
+  });
+
+  it('strips illegal XML control characters', () => {
+    const card = makeCard({ fullName: 'Ay\u0000şe' });
+    const xml = buildXml(card);
+
+    expect(xml).toContain('<adSoyad>Ayşe</adSoyad>');
   });
 });
 
