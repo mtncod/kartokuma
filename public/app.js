@@ -27,6 +27,7 @@ fileInput.addEventListener('change', async () => {
   if (!file) return;
 
   hide(resultEl);
+  lastCard = null;
   hide(errorEl);
   show(statusEl, 'Fotoğraf hazırlanıyor...');
 
@@ -85,12 +86,20 @@ copyBtn.addEventListener('click', async () => {
 
 csvBtn.addEventListener('click', () => {
   if (!lastCard) return;
-  downloadFile(buildFileName(lastCard, 'csv'), buildCsv(lastCard), 'text/csv;charset=utf-8');
+  try {
+    downloadFile(buildFileName(lastCard, 'csv'), buildCsv(lastCard), 'text/csv;charset=utf-8');
+  } catch (err) {
+    show(errorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
+  }
 });
 
 xmlBtn.addEventListener('click', () => {
   if (!lastCard) return;
-  downloadFile(buildFileName(lastCard, 'xml'), buildXml(lastCard), 'application/xml;charset=utf-8');
+  try {
+    downloadFile(buildFileName(lastCard, 'xml'), buildXml(lastCard), 'application/xml;charset=utf-8');
+  } catch (err) {
+    show(errorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
+  }
 });
 
 function downloadFile(filename, content, mimeType) {
