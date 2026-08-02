@@ -54,7 +54,7 @@ fileInput.addEventListener('change', async () => {
     hide(statusEl);
     if (err && (err.name === 'AbortError' || err.name === 'TimeoutError')) {
       show(errorEl, 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.');
-    } else if (!navigator.onLine || err instanceof TypeError) {
+    } else if (err instanceof TypeError || !navigator.onLine) {
       show(errorEl, 'İnternet bağlantısı yok. Kartvizit taramak için bağlantı gerekli.');
     } else {
       show(errorEl, err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
