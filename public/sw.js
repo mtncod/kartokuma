@@ -1,3 +1,9 @@
+// Bu sürüm numarası, public/ altındaki herhangi bir sayfa kabuğu dosyası
+// (ör. app.js, style.css, index.html) her değiştiğinde MUTLAKA artırılmalı.
+// Aksi halde kullanıcılar eski, önbelleğe alınmış sürümde takılı kalır —
+// özellikle iOS'ta "Ana Ekrana Ekle" ile yüklenmiş standalone modda,
+// yenileme (reload) butonu olmadığı için bu durumdan kurtulmanın kolay bir
+// yolu yoktur.
 const CACHE_NAME = 'kartokuma-shell-v1';
 const SHELL_FILES = [
   '/',
@@ -30,10 +36,18 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') {
+    return; // GET olmayan istekler önbellekleme mantığına dahil edilmez
+  }
+
   const url = new URL(event.request.url);
 
-  if (url.pathname === '/api/scan') {
-    return; // /api/scan asla önbellekten karşılanmaz — her zaman ağa git
+  if (url.origin !== self.location.origin) {
+    return; // farklı origin'e giden istekler önbellekleme mantığına dahil edilmez
+  }
+
+  if (url.pathname.startsWith('/api/')) {
+    return; // /api/ altındaki hiçbir istek önbellekten karşılanmaz — her zaman ağa git
   }
 
   event.respondWith(
