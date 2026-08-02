@@ -2,6 +2,7 @@
   "name": "Kartokuma — Kartvizit Okuma",
   "short_name": "Kartokuma",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
   "background_color": "#f4f4f5",
   "theme_color": "#2563eb",
