@@ -1,3 +1,11 @@
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.error('Servis worker kaydı başarısız:', err);
+    });
+  });
+}
+
 const fileInput = document.getElementById('fileInput');
 const statusEl = document.getElementById('status');
 const resultEl = document.getElementById('result');
@@ -44,8 +52,10 @@ fileInput.addEventListener('change', async () => {
     show(resultEl);
   } catch (err) {
     hide(statusEl);
-    if (err && err.name === 'AbortError') {
+    if (err && (err.name === 'AbortError' || err.name === 'TimeoutError')) {
       show(errorEl, 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.');
+    } else if (!navigator.onLine || err instanceof TypeError) {
+      show(errorEl, 'İnternet bağlantısı yok. Kartvizit taramak için bağlantı gerekli.');
     } else {
       show(errorEl, err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
     }
