@@ -8,6 +8,7 @@ export function formatReport(data: CardData): string {
   if (data.company) lines.push(`Şirket: ${data.company}`);
   if (data.phones.length > 0) lines.push(`Telefon: ${data.phones.join(' / ')}`);
   if (data.email) lines.push(`E-posta: ${data.email}`);
+  if (data.il) lines.push(`İl: ${data.il}`);
   if (data.address) lines.push(`Adres: ${data.address}`);
   if (data.website) lines.push(`Web Sitesi: ${data.website}`);
 
@@ -21,6 +22,7 @@ export function isEmptyCard(data: CardData): boolean {
     !data.company &&
     data.phones.length === 0 &&
     !data.email &&
+    !data.il &&
     !data.address &&
     !data.website
   );

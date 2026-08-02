@@ -9,6 +9,7 @@ function makeCard(overrides: Partial<CardData> = {}): CardData {
     company: '',
     phones: [],
     email: '',
+    il: '',
     address: '',
     website: '',
     ...overrides,
@@ -23,6 +24,7 @@ describe('formatReport', () => {
       company: 'Acme A.Ş.',
       phones: ['0212 555 11 22'],
       email: 'ayse@acme.com',
+      il: 'İstanbul',
       address: 'Levent, İstanbul',
       website: 'acme.com',
     });
@@ -34,6 +36,7 @@ describe('formatReport', () => {
         'Şirket: Acme A.Ş.',
         'Telefon: 0212 555 11 22',
         'E-posta: ayse@acme.com',
+        'İl: İstanbul',
         'Adres: Levent, İstanbul',
         'Web Sitesi: acme.com',
       ].join('\n'),
@@ -51,6 +54,12 @@ describe('formatReport', () => {
 
     expect(formatReport(card)).toBe('Telefon: 0212 555 11 22 / 0532 111 22 33');
   });
+
+  it('includes the İl line when present', () => {
+    const card = makeCard({ il: 'Ankara' });
+
+    expect(formatReport(card)).toBe('İl: Ankara');
+  });
 });
 
 describe('isEmptyCard', () => {
@@ -64,5 +73,9 @@ describe('isEmptyCard', () => {
 
   it('returns false when only phones has entries', () => {
     expect(isEmptyCard(makeCard({ phones: ['0212 555 11 22'] }))).toBe(false);
+  });
+
+  it('returns false when only il is populated', () => {
+    expect(isEmptyCard(makeCard({ il: 'İzmir' }))).toBe(false);
   });
 });
