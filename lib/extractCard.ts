@@ -25,6 +25,12 @@ const CARD_SCHEMA = {
       type: 'string',
       description: 'E-posta adresi. Bulunamazsa boş string.',
     },
+    il: {
+      type: 'string',
+      description:
+        'Kartvizitteki şehir/il bilgisi (ör. "İstanbul"). Adres metninden bağımsız ' +
+        'olarak, kartvizitte geçen ile bakarak doldur. Bulunamazsa boş string.',
+    },
     address: {
       type: 'string',
       description: 'Açık adres. Bulunamazsa boş string.',
@@ -34,15 +40,15 @@ const CARD_SCHEMA = {
       description: 'Web sitesi. Bulunamazsa boş string.',
     },
   },
-  required: ['fullName', 'jobTitle', 'company', 'phones', 'email', 'address', 'website'],
+  required: ['fullName', 'jobTitle', 'company', 'phones', 'email', 'il', 'address', 'website'],
   additionalProperties: false,
 } as const;
 
 const PROMPT =
   'Bu bir kartvizit fotoğrafı. Kartvizitten şu bilgileri çıkar: ad soyad, unvan, ' +
-  'şirket adı, telefon numarası/numaraları, e-posta, adres, web sitesi. Kartvizitte ' +
-  'olmayan alanlar için boş string ("") veya boş dizi ([]) kullan. Bilgiyi olduğu ' +
-  'gibi, çeviri veya yorum yapmadan çıkar.';
+  'şirket adı, telefon numarası/numaraları, e-posta, il (şehir), adres, web sitesi. ' +
+  'Kartvizitte olmayan alanlar için boş string ("") veya boş dizi ([]) kullan. ' +
+  'Bilgiyi olduğu gibi, çeviri veya yorum yapmadan çıkar.';
 
 export interface AnthropicMessagesClient {
   messages: {

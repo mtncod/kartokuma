@@ -4,6 +4,7 @@ export interface CardData {
   company: string;
   phones: string[];
   email: string;
+  il: string;
   address: string;
   website: string;
 }

@@ -21,6 +21,7 @@ describe('extractCard', () => {
         company: 'Acme A.Ş.',
         phones: ['0212 555 11 22'],
         email: 'ayse@acme.com',
+        il: 'İstanbul',
         address: 'Levent, İstanbul',
         website: 'acme.com',
       }),
@@ -34,6 +35,7 @@ describe('extractCard', () => {
       company: 'Acme A.Ş.',
       phones: ['0212 555 11 22'],
       email: 'ayse@acme.com',
+      il: 'İstanbul',
       address: 'Levent, İstanbul',
       website: 'acme.com',
     });
@@ -100,6 +102,7 @@ describe('extractCard', () => {
                   company: '',
                   phones: [],
                   email: '',
+                  il: '',
                   address: '',
                   website: '',
                 }),
@@ -119,6 +122,7 @@ describe('extractCard', () => {
       'company',
       'phones',
       'email',
+      'il',
       'address',
       'website',
     ]);
