@@ -28,12 +28,16 @@
     <section id="result" class="result" hidden>
       <h2>Sonuç</h2>
       <pre id="reportText"></pre>
-      <button id="copyBtn" type="button">Panoya Kopyala</button>
+      <div class="actions">
+        <button id="copyBtn" type="button">Panoya Kopyala</button>
+        <button id="csvBtn" type="button">Excel İndir</button>
+        <button id="xmlBtn" type="button">XML İndir</button>
+      </div>
     </section>
 
     <div id="error" class="error" hidden></div>
   </main>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

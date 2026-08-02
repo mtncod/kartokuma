@@ -1,3 +1,5 @@
+import { buildCsv, buildXml, buildFileName } from './exportFormats.js';
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch((err) => {
@@ -12,6 +14,10 @@ const resultEl = document.getElementById('result');
 const reportTextEl = document.getElementById('reportText');
 const copyBtn = document.getElementById('copyBtn');
 const errorEl = document.getElementById('error');
+const csvBtn = document.getElementById('csvBtn');
+const xmlBtn = document.getElementById('xmlBtn');
+
+let lastCard = null;
 
 const MAX_DIMENSION = 1600;
 const JPEG_QUALITY = 0.85;
@@ -49,6 +55,7 @@ fileInput.addEventListener('change', async () => {
     }
 
     reportTextEl.textContent = data.report;
+    lastCard = data.card;
     show(resultEl);
   } catch (err) {
     hide(statusEl);
@@ -75,6 +82,28 @@ copyBtn.addEventListener('click', async () => {
     show(errorEl, 'Kopyalama başarısız oldu. Metni manuel olarak seçip kopyalayabilirsin.');
   }
 });
+
+csvBtn.addEventListener('click', () => {
+  if (!lastCard) return;
+  downloadFile(buildFileName(lastCard, 'csv'), buildCsv(lastCard), 'text/csv;charset=utf-8');
+});
+
+xmlBtn.addEventListener('click', () => {
+  if (!lastCard) return;
+  downloadFile(buildFileName(lastCard, 'xml'), buildXml(lastCard), 'application/xml;charset=utf-8');
+});
+
+function downloadFile(filename, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 function resizeImage(file) {
   return new Promise((resolve, reject) => {
