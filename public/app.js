@@ -152,3 +152,70 @@ function show(el, text) {
 function hide(el) {
   el.hidden = true;
 }
+
+const formFileInput = document.getElementById('formFileInput');
+const formStatusEl = document.getElementById('formStatus');
+const formResultEl = document.getElementById('formResult');
+const formReportTextEl = document.getElementById('formReportText');
+const formCopyBtn = document.getElementById('formCopyBtn');
+const formErrorEl = document.getElementById('formError');
+
+formFileInput.addEventListener('change', async () => {
+  const file = formFileInput.files && formFileInput.files[0];
+  if (!file) return;
+
+  hide(formResultEl);
+  hide(formErrorEl);
+  show(formStatusEl, 'Fotoğraf hazırlanıyor...');
+
+  try {
+    const { base64, mediaType } = await resizeImage(file);
+    show(formStatusEl, 'Form okunuyor...');
+
+    const response = await fetch('/api/transcribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageBase64: base64, mediaType }),
+      signal: AbortSignal.timeout(60000),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Sunucuya ulaşılamadı. Lütfen tekrar deneyin.');
+    }
+
+    hide(formStatusEl);
+
+    if (data.empty) {
+      show(formErrorEl, 'Form okunamadı. Lütfen daha net bir fotoğraf ile tekrar deneyin.');
+      return;
+    }
+
+    formReportTextEl.textContent = data.text;
+    show(formResultEl);
+  } catch (err) {
+    hide(formStatusEl);
+    if (err && (err.name === 'AbortError' || err.name === 'TimeoutError')) {
+      show(formErrorEl, 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.');
+    } else if (err instanceof TypeError) {
+      show(formErrorEl, 'İnternet bağlantısı yok. Form taramak için bağlantı gerekli.');
+    } else {
+      show(formErrorEl, err.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+    }
+  } finally {
+    formFileInput.value = '';
+  }
+});
+
+formCopyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(formReportTextEl.textContent || '');
+    formCopyBtn.textContent = 'Kopyalandı!';
+    setTimeout(() => {
+      formCopyBtn.textContent = 'Panoya Kopyala';
+    }, 1500);
+  } catch {
+    show(formErrorEl, 'Kopyalama başarısız oldu. Metni manuel olarak seçip kopyalayabilirsin.');
+  }
+});

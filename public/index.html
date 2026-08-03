@@ -36,6 +36,28 @@
     </section>
 
     <div id="error" class="error" hidden></div>
+
+    <hr class="section-divider" />
+
+    <h2>Form Tara</h2>
+    <p>Elle veya bilgisayarda doldurulmuş bir form fotoğrafı yükle, metne çevirelim.</p>
+
+    <label class="upload-box" for="formFileInput">
+      <span>Form fotoğrafı seç veya çek</span>
+      <input type="file" id="formFileInput" accept="image/*" capture="environment" />
+    </label>
+
+    <div id="formStatus" class="status" hidden></div>
+
+    <section id="formResult" class="result" hidden>
+      <h2>Form Metni</h2>
+      <pre id="formReportText"></pre>
+      <div class="actions">
+        <button id="formCopyBtn" type="button">Panoya Kopyala</button>
+      </div>
+    </section>
+
+    <div id="formError" class="error" hidden></div>
   </main>
 
   <script type="module" src="app.js"></script>
