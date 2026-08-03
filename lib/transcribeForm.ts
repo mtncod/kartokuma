@@ -4,7 +4,8 @@ const PROMPT =
   'Bu, elle veya bilgisayarda doldurulmuş bir form fotoğrafı. Fotoğraftaki tüm metni ' +
   '(başlıklar, alan adları, doldurulmuş değerler dahil) olduğu gibi, yorum veya çeviri ' +
   'yapmadan düz metin olarak çıkar. Formun yapısını satır satır, okunabilir şekilde ' +
-  'koru. Fotoğrafta hiç metin yoksa veya okunamıyorsa boş string ("") döndür.';
+  'koru. Fotoğrafta hiç okunabilir metin yoksa, hiçbir açıklama veya yer tutucu yazmadan ' +
+  'yanıtını tamamen boş bırak.';
 
 export interface AnthropicMessagesClient {
   messages: {
