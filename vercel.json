@@ -3,6 +3,9 @@
   "functions": {
     "api/scan.ts": {
       "maxDuration": 60
+    },
+    "api/transcribe.ts": {
+      "maxDuration": 60
     }
   }
 }
