@@ -61,6 +61,12 @@ p {
   font-size: 0.95rem;
 }
 
+.form-hint {
+  font-size: 0.85rem;
+  color: #52525b;
+  margin: 0 0 12px;
+}
+
 .result button {
   width: 100%;
   padding: 10px;

@@ -16,6 +16,7 @@ const copyBtn = document.getElementById('copyBtn');
 const errorEl = document.getElementById('error');
 const csvBtn = document.getElementById('csvBtn');
 const xmlBtn = document.getElementById('xmlBtn');
+const formHintEl = document.getElementById('formHint');
 
 let lastCard = null;
 
@@ -58,6 +59,7 @@ fileInput.addEventListener('change', async () => {
     reportTextEl.textContent = data.report;
     lastCard = data.card;
     show(resultEl);
+    updateFormHint();
   } catch (err) {
     hide(statusEl);
     if (err && (err.name === 'AbortError' || err.name === 'TimeoutError')) {
@@ -153,6 +155,16 @@ function hide(el) {
   el.hidden = true;
 }
 
+function updateFormHint() {
+  if (!lastFormText) {
+    hide(formHintEl);
+    return;
+  }
+  const preview = lastFormText.replace(/\s+/g, ' ').trim().slice(0, 60);
+  const ellipsis = lastFormText.replace(/\s+/g, ' ').trim().length > 60 ? '…' : '';
+  show(formHintEl, `Bu indirmeye eklenecek form: "${preview}${ellipsis}"`);
+}
+
 const formFileInput = document.getElementById('formFileInput');
 const formStatusEl = document.getElementById('formStatus');
 const formResultEl = document.getElementById('formResult');
@@ -199,6 +211,7 @@ formFileInput.addEventListener('change', async () => {
 
     formReportTextEl.textContent = data.text;
     lastFormText = data.text;
+    updateFormHint();
     show(formResultEl);
   } catch (err) {
     hide(formStatusEl);
