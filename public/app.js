@@ -169,7 +169,6 @@ const formFileInput = document.getElementById('formFileInput');
 const formStatusEl = document.getElementById('formStatus');
 const formResultEl = document.getElementById('formResult');
 const formReportTextEl = document.getElementById('formReportText');
-const formCopyBtn = document.getElementById('formCopyBtn');
 const formErrorEl = document.getElementById('formError');
 
 let lastFormText = null;
@@ -222,17 +221,5 @@ formFileInput.addEventListener('change', async () => {
     }
   } finally {
     formFileInput.value = '';
-  }
-});
-
-formCopyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(formReportTextEl.textContent || '');
-    formCopyBtn.textContent = 'Kopyalandı!';
-    setTimeout(() => {
-      formCopyBtn.textContent = 'Panoya Kopyala';
-    }, 1500);
-  } catch {
-    show(formErrorEl, 'Kopyalama başarısız oldu. Metni manuel olarak seçip kopyalayabilirsin.');
   }
 });
