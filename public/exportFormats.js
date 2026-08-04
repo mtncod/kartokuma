@@ -78,7 +78,7 @@ export function buildFileName(card, extension, dateStamp) {
 }
 
 export function buildFormCsv(text) {
-  const bom = '﻿';
+  const bom = '\uFEFF';
   const header = 'Form Metni';
   const cell = escapeCsvCell(text);
   return bom + header + '\r\n' + cell + '\r\n';
