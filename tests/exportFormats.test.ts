@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildCsv, buildXml, buildFileName, slugify, buildFormCsv, buildFormXml, buildFormFileName } from '../public/exportFormats.js';
+import { buildCsv, buildXml, buildFileName, slugify } from '../public/exportFormats.js';
 
 function makeCard(overrides = {}) {
   return {
@@ -201,53 +201,4 @@ describe('buildFileName', () => {
   });
 });
 
-describe('buildFormCsv', () => {
-  it('starts with a UTF-8 BOM and a single header/data row', () => {
-    const csv = buildFormCsv('Ad: Ali Veli\nTarih: 01.08.2026');
-    expect(csv.charCodeAt(0)).toBe(0xfeff);
-    const lines = csv.replace(/^\uFEFF/, '').split('\r\n');
-    expect(lines[0]).toBe('Form Metni');
-  });
 
-  it('preserves embedded newlines inside a single quoted cell', () => {
-    const csv = buildFormCsv('Ad: Ali Veli\nTarih: 01.08.2026');
-    const body = csv.replace(/^\uFEFF/, '').replace(/\r\n$/, '');
-    const dataCell = body.split('\r\n').slice(1).join('\r\n');
-    expect(dataCell).toBe('"Ad: Ali Veli\nTarih: 01.08.2026"');
-  });
-
-  it('neutralizes a formula-injection payload with a leading apostrophe', () => {
-    const csv = buildFormCsv('=SUM(1,2)');
-    expect(csv).toContain("'=SUM(1,2)");
-  });
-});
-
-describe('buildFormXml', () => {
-  it('wraps the text in a form/metin element', () => {
-    const xml = buildFormXml('Ad: Ali Veli');
-    expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>');
-    expect(xml).toContain('<form>');
-    expect(xml).toContain('<metin>Ad: Ali Veli</metin>');
-    expect(xml).toContain('</form>');
-  });
-
-  it('escapes XML special characters', () => {
-    const xml = buildFormXml('A & B <Ltd> "Şti"');
-    expect(xml).toContain('<metin>A &amp; B &lt;Ltd&gt; &quot;Şti&quot;</metin>');
-  });
-
-  it('strips illegal XML control characters', () => {
-    const xml = buildFormXml('Ay\u0000şe');
-    expect(xml).toContain('<metin>Ayşe</metin>');
-  });
-});
-
-describe('buildFormFileName', () => {
-  it('builds a filename with a date+time stamp', () => {
-    expect(buildFormFileName('csv', '20260804-143022')).toBe('form-20260804-143022.csv');
-  });
-
-  it('respects the requested extension', () => {
-    expect(buildFormFileName('xml', '20260804-143022')).toBe('form-20260804-143022.xml');
-  });
-});

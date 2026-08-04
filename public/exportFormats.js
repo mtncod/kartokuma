@@ -78,25 +78,3 @@ export function buildFileName(card, extension, dateStamp) {
   const stamp = dateStamp || new Date().toISOString().slice(0, 10).replace(/-/g, '');
   return base ? `kartvizit-${base}-${stamp}.${extension}` : `kartvizit-${stamp}.${extension}`;
 }
-
-export function buildFormCsv(text) {
-  const bom = '\uFEFF';
-  const header = 'Form Metni';
-  const cell = escapeCsvCell(text);
-  return bom + header + '\r\n' + cell + '\r\n';
-}
-
-export function buildFormXml(text) {
-  return '<?xml version="1.0" encoding="UTF-8"?>\n' + '<form>\n' + `  <metin>${escapeXml(text)}</metin>\n` + '</form>\n';
-}
-
-export function buildFormFileName(extension, dateStamp) {
-  const stamp =
-    dateStamp ||
-    new Date()
-      .toISOString()
-      .slice(0, 19)
-      .replace(/[-:]/g, '')
-      .replace('T', '-');
-  return `form-${stamp}.${extension}`;
-}

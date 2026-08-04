@@ -1,4 +1,4 @@
-import { buildCsv, buildXml, buildFileName, buildFormCsv, buildFormXml, buildFormFileName } from './exportFormats.js';
+import { buildCsv, buildXml, buildFileName } from './exportFormats.js';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -171,8 +171,6 @@ const formResultEl = document.getElementById('formResult');
 const formReportTextEl = document.getElementById('formReportText');
 const formCopyBtn = document.getElementById('formCopyBtn');
 const formErrorEl = document.getElementById('formError');
-const formCsvBtn = document.getElementById('formCsvBtn');
-const formXmlBtn = document.getElementById('formXmlBtn');
 
 let lastFormText = null;
 
@@ -236,23 +234,5 @@ formCopyBtn.addEventListener('click', async () => {
     }, 1500);
   } catch {
     show(formErrorEl, 'Kopyalama başarısız oldu. Metni manuel olarak seçip kopyalayabilirsin.');
-  }
-});
-
-formCsvBtn.addEventListener('click', () => {
-  if (!lastFormText) return;
-  try {
-    downloadFile(buildFormFileName('csv'), buildFormCsv(lastFormText), 'text/csv;charset=utf-8');
-  } catch (err) {
-    show(formErrorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
-  }
-});
-
-formXmlBtn.addEventListener('click', () => {
-  if (!lastFormText) return;
-  try {
-    downloadFile(buildFormFileName('xml'), buildFormXml(lastFormText), 'application/xml;charset=utf-8');
-  } catch (err) {
-    show(formErrorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
   }
 });
