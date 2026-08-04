@@ -36,9 +36,9 @@ describe('buildCsv', () => {
     const csv = buildCsv(card);
     const lines = csv.replace(/^\uFEFF/, '').split('\r\n');
 
-    expect(lines[0]).toBe('Ad Soyad;Unvan;Şirket;Telefon;E-posta;İl;Adres;Web Sitesi');
+    expect(lines[0]).toBe('Ad Soyad;Unvan;Şirket;Telefon;E-posta;İl;Adres;Web Sitesi;Form Açıklamaları');
     expect(lines[1]).toBe(
-      'Ayşe Yılmaz;Satış Müdürü;Acme A.Ş.;0212 555 11 22;ayse@acme.com;İstanbul;Levent, İstanbul;acme.com',
+      'Ayşe Yılmaz;Satış Müdürü;Acme A.Ş.;0212 555 11 22;ayse@acme.com;İstanbul;Levent, İstanbul;acme.com;',
     );
   });
 
@@ -81,6 +81,34 @@ describe('buildCsv', () => {
     const dataLine = csv.replace(/^\uFEFF/, '').split('\r\n')[1];
 
     expect(dataLine).toContain('"Levent\rBeşiktaş"');
+  });
+
+  it('appends a Form Açıklamaları column with the form text when provided', () => {
+    const card = makeCard({ fullName: 'Ayşe Yılmaz' });
+    const csv = buildCsv(card, 'Ad: Ali Veli\nTarih: 01.08.2026');
+    const lines = csv.replace(/^\uFEFF/, '').split('\r\n');
+
+    expect(lines[0]).toBe('Ad Soyad;Unvan;Şirket;Telefon;E-posta;İl;Adres;Web Sitesi;Form Açıklamaları');
+    expect(lines[1]).toBe(
+      'Ayşe Yılmaz;;;;;;;;"Ad: Ali Veli\nTarih: 01.08.2026"',
+    );
+  });
+
+  it('leaves the Form Açıklamaları column empty when formText is not provided', () => {
+    const card = makeCard({ fullName: 'Ayşe Yılmaz' });
+    const csv = buildCsv(card);
+    const lines = csv.replace(/^\uFEFF/, '').split('\r\n');
+
+    expect(lines[0]).toBe('Ad Soyad;Unvan;Şirket;Telefon;E-posta;İl;Adres;Web Sitesi;Form Açıklamaları');
+    expect(lines[1]).toBe('Ayşe Yılmaz;;;;;;;;');
+  });
+
+  it('neutralizes a formula-injection payload in the form text column', () => {
+    const card = makeCard();
+    const csv = buildCsv(card, '=SUM(1,2)');
+    const dataLine = csv.replace(/^\uFEFF/, '').split('\r\n')[1];
+
+    expect(dataLine).toContain("'=SUM(1,2)");
   });
 });
 
@@ -128,6 +156,21 @@ describe('buildXml', () => {
     const xml = buildXml(card);
 
     expect(xml).toContain('<adSoyad>Ayşe</adSoyad>');
+  });
+
+  it('includes a formAciklamalari tag with the form text when provided', () => {
+    const xml = buildXml(makeCard(), 'Ad: Ali Veli\nTarih: 01.08.2026');
+    expect(xml).toContain('<formAciklamalari>Ad: Ali Veli\nTarih: 01.08.2026</formAciklamalari>');
+  });
+
+  it('includes an empty formAciklamalari tag when formText is not provided', () => {
+    const xml = buildXml(makeCard());
+    expect(xml).toContain('<formAciklamalari></formAciklamalari>');
+  });
+
+  it('escapes XML special characters in the form text', () => {
+    const xml = buildXml(makeCard(), 'A & B <Ltd>');
+    expect(xml).toContain('<formAciklamalari>A &amp; B &lt;Ltd&gt;</formAciklamalari>');
   });
 });
 

@@ -23,8 +23,8 @@ function escapeCsvCell(value) {
   return str;
 }
 
-export function buildCsv(card) {
-  const header = ['Ad Soyad', 'Unvan', 'Şirket', 'Telefon', 'E-posta', 'İl', 'Adres', 'Web Sitesi'];
+export function buildCsv(card, formText) {
+  const header = ['Ad Soyad', 'Unvan', 'Şirket', 'Telefon', 'E-posta', 'İl', 'Adres', 'Web Sitesi', 'Form Açıklamaları'];
   const row = [
     card.fullName,
     card.jobTitle,
@@ -34,13 +34,14 @@ export function buildCsv(card) {
     card.il,
     card.address,
     card.website,
+    formText,
   ].map(escapeCsvCell);
 
   const bom = '\uFEFF';
   return bom + header.join(';') + '\r\n' + row.join(';') + '\r\n';
 }
 
-export function buildXml(card) {
+export function buildXml(card, formText) {
   const phoneTags = card.phones.map((p) => `  <telefon>${escapeXml(p)}</telefon>`).join('\n');
 
   return (
@@ -54,6 +55,7 @@ export function buildXml(card) {
     `  <il>${escapeXml(card.il)}</il>\n` +
     `  <adres>${escapeXml(card.address)}</adres>\n` +
     `  <webSitesi>${escapeXml(card.website)}</webSitesi>\n` +
+    `  <formAciklamalari>${escapeXml(formText)}</formAciklamalari>\n` +
     '</kartvizit>\n'
   );
 }
