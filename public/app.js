@@ -87,7 +87,7 @@ copyBtn.addEventListener('click', async () => {
 csvBtn.addEventListener('click', () => {
   if (!lastCard) return;
   try {
-    downloadFile(buildFileName(lastCard, 'csv'), buildCsv(lastCard), 'text/csv;charset=utf-8');
+    downloadFile(buildFileName(lastCard, 'csv'), buildCsv(lastCard, lastFormText), 'text/csv;charset=utf-8');
   } catch (err) {
     show(errorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
   }
@@ -96,7 +96,7 @@ csvBtn.addEventListener('click', () => {
 xmlBtn.addEventListener('click', () => {
   if (!lastCard) return;
   try {
-    downloadFile(buildFileName(lastCard, 'xml'), buildXml(lastCard), 'application/xml;charset=utf-8');
+    downloadFile(buildFileName(lastCard, 'xml'), buildXml(lastCard, lastFormText), 'application/xml;charset=utf-8');
   } catch (err) {
     show(errorEl, 'Dosya oluşturulamadı. Lütfen tekrar deneyin.');
   }
