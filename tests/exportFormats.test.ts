@@ -200,5 +200,3 @@ describe('buildFileName', () => {
     expect(buildFileName(card, 'csv', '20260802')).toBe('kartvizit-20260802.csv');
   });
 });
-
-

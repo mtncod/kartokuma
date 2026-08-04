@@ -4,7 +4,7 @@
 // özellikle iOS'ta "Ana Ekrana Ekle" ile yüklenmiş standalone modda,
 // yenileme (reload) butonu olmadığı için bu durumdan kurtulmanın kolay bir
 // yolu yoktur.
-const CACHE_NAME = 'kartokuma-shell-v4';
+const CACHE_NAME = 'kartokuma-shell-v5';
 const SHELL_FILES = [
   '/',
   '/style.css',

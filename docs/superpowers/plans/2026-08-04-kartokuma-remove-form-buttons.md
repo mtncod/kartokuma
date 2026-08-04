@@ -112,4 +112,4 @@ Vercel Git entegrasyonu push'u otomatik deploy eder.
 
 - [ ] **Step 2: Canlıda doğrula**
 
-`https://kartokuma.vercel.app/` adresinde Form Tara bölümünde artık sadece "Panoya Kopyala" butonu olduğunu, "Excel İndir"/"XML İndir" butonlarının olmadığını doğrula. Bir kartvizit ve bir form taratıp kartvizit bölümündeki "Excel İndir"e bastığında indirilen dosyanın hâlâ form metnini içerdiğini (bir önceki özellikte eklenen "Form Açıklamaları" sütunu/`<formAciklamalari>` etiketi) doğrula. Bu adım insan partnerine bırakılır.
+`https://kartokuma.vercel.app/` adresinde Form Tara bölümünde artık hiç buton olmadığını (sadece taranan form metninin ekranda gösterildiğini) doğrula. Bir kartvizit ve bir form taratıp kartvizit bölümündeki "Excel İndir"e bastığında indirilen dosyanın hâlâ form metnini içerdiğini (bir önceki özellikte eklenen "Form Açıklamaları" sütunu/`<formAciklamalari>` etiketi) doğrula. Bu adım insan partnerine bırakılır.

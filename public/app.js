@@ -179,6 +179,7 @@ formFileInput.addEventListener('change', async () => {
 
   hide(formResultEl);
   lastFormText = null;
+  updateFormHint();
   hide(formErrorEl);
   show(formStatusEl, 'Fotoğraf hazırlanıyor...');
 
